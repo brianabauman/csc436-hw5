@@ -8,7 +8,7 @@ import { Message } from '../message/message.model';
   inputs: ['message'],
   selector: 'chat-message',
   templateUrl: './chat-message.component.html',
-  styleUrls: ['./chat-message.component.css']
+  styleUrls: [ './chat-message.component.css' ] 
 })
 export class ChatMessage implements OnInit {
   message: Message;

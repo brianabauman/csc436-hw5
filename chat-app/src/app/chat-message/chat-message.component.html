@@ -1,4 +1,4 @@
-<div class="msg-controller"
+<div class="msg-container"
     [ngClass]="{ 'base-sent': !incoming, 'base-receive': incoming }">
     <div class="avatar"
         *ngIf="!incoming">
@@ -6,7 +6,7 @@
     </div>
     <div class="messages"
         [ngClass]="{ 'msg-sent': !incoming, 'msg-receive': incoming }">
-        <p>{{message.text}}></p>
+        <p>{{message.text}}</p>
         <p class="time">{{message.author.name}} :: {{message.sentAt | fromNow}}</p>
     </div>
     <div class="avatar"
