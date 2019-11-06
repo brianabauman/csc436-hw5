@@ -28,6 +28,7 @@ export class AuthService {
       .catch(err => {
         console.log('Something went wrong:',err.message);
         this.loggedIn = false;
+        alert("Invalid username/password.");
       });
   }
 
