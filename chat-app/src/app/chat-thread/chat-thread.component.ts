@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Thread } from '../thread/thread.model';
+import { ThreadsService } from '../thread/threads.service';
+
 @Component({
   inputs: ['thread'],
   selector: 'chat-thread',

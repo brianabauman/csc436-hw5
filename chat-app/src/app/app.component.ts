@@ -1,6 +1,14 @@
 import { Component } from '@angular/core';
 
-import { ChatExampleData } from './data/ChatExampleData'
+import { ChatThreads } from './chat-threads/chat-threads.component';
+import { ChatThread } from './chat-thread/chat-thread.component';
+import { ChatWindow } from './chat-window/chat-window.component';
+import { ChatMessage } from './chat-message/chat-message.component';
+import { ChatNavBar } from './chat-nav-bar/nav-bar.component';
+import { ChatExampleData } from './data/ChatExampleData';
+import { MessagesService } from './message/messages.service';
+import { ThreadsService } from './thread/threads.service';
+import { UsersService } from './user/users.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +18,7 @@ import { ChatExampleData } from './data/ChatExampleData'
 export class AppComponent {
   constructor(private messagesService: MessagesService,
               private threadsService: ThreadsService,
-              private userService: UserService) {
-    ChatExampleData.init(messagesService, threadsService, userService);
+              private usersService: UsersService) {
+    ChatExampleData.init(messagesService, threadsService, usersService);
   }
 }

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+
+import { User } from '../user/user.model';
+import { UsersService } from '../user/users.service';
+import { Message } from '../message/message.model';
 
 @Component({
   inputs: ['message'],
@@ -7,18 +10,18 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
   templateUrl: './chat-message.component.html',
   styleUrls: ['./chat-message.component.css']
 })
-export class ChatMessageComponent implements OnInit {
+export class ChatMessage implements OnInit {
   message: Message;
   currentUser: User;
   incoming: boolean;
 
-  constructor(private userService: UserService) { }
+  constructor(private usersService: UsersService) { }
 
   ngOnInit() {
-    this.userService.CurrentUser.subscribe(
+    this.usersService.currentUser.subscribe(
       (user: User) => {
         this.currentUser = user;
-        if (this,message.author && user) {
+        if (this.message.author && user) {
           this.incoming = this.message.author.id !== user.id;
         }
       });

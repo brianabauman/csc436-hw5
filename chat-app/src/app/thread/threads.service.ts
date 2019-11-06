@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject, Observable } from 'rxjs/Rx';
+import { Subject, BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { Thread } from './thread.model';
 import { Message } from '../message/message.model';
 import { MessagesService } from '../message/messages.service';
@@ -25,7 +27,7 @@ export class ThreadsService {
   constructor(public messagesService: MessagesService) {
 
     this.threads = messagesService.messages
-      .map( (messages: Message[]) => {
+      .pipe(map( (messages: Message[]) => {
         const threads: {[key: string]: Thread} = {};
         // Store the message's thread in our accumulator `threads`
         messages.map((message: Message) => {
@@ -40,16 +42,17 @@ export class ThreadsService {
           }
         });
         return threads;
-      });
+      }));
 
     this.orderedThreads = this.threads
-      .map((threadGroups: { [key: string]: Thread }) => {
+      .pipe(map((threadGroups: { [key: string]: Thread }) => {
         const threads: Thread[] = _.values(threadGroups);
         return _.sortBy(threads, (t: Thread) => t.lastMessage.sentAt).reverse();
-      });
+      }));
 
-    this.currentThreadMessages = this.currentThread
-      .combineLatest(messagesService.messages,
+    this.currentThreadMessages = 
+    combineLatest(this.currentThread,
+                  messagesService.messages,
                      (currentThread: Thread, messages: Message[]) => {
         if (currentThread && messages.length > 0) {
           return _.chain(messages)

@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { map, filter, publishReplay, refCount, scan } from 'rxjs/operators';
+
 import { User } from '../user/user.model';
 import { Thread } from '../thread/thread.model';
 import { Message } from '../message/message.model';
@@ -30,16 +32,16 @@ export class MessagesService {
   constructor() {
     this.messages = this.updates
       // watch the updates and accumulate operations on the messages
-      .scan((messages: Message[],
+      .pipe(scan((messages: Message[],
              operation: IMessagesOperation) => {
                return operation(messages);
              },
-            initialMessages)
+            initialMessages))
       // make sure we can share the most recent list of messages across anyone
       // who's interested in subscribing and cache the last known list of
       // messages
-      .publishReplay(1)
-      .refCount();
+      .pipe(publishReplay(1))
+      .pipe(refCount());
 
     // `create` takes a Message and then puts an operation (the inner function)
     // on the `updates` stream to add the Message to the list of messages.
@@ -56,11 +58,11 @@ export class MessagesService {
     // entirely. The pros are that it is potentially clearer. The cons are that
     // the stream is no longer composable.
     this.create
-      .map( function(message: Message): IMessagesOperation {
+      .pipe(map( function(message: Message): IMessagesOperation {
         return (messages: Message[]) => {
           return messages.concat(message);
         };
-      })
+      }))
       .subscribe(this.updates);
 
     this.newMessages
@@ -69,7 +71,7 @@ export class MessagesService {
     // similarly, `markThreadAsRead` takes a Thread and then puts an operation
     // on the `updates` stream to mark the Messages as read
     this.markThreadAsRead
-      .map( (thread: Thread) => {
+      .pipe(map( (thread: Thread) => {
         return (messages: Message[]) => {
           return messages.map( (message: Message) => {
             // note that we're manipulating `message` directly here. Mutability
@@ -81,7 +83,7 @@ export class MessagesService {
             return message;
           });
         };
-      })
+      }))
       .subscribe(this.updates);
 
   }
@@ -93,12 +95,12 @@ export class MessagesService {
 
   messagesForThreadUser(thread: Thread, user: User): Observable<Message> {
     return this.newMessages
-      .filter((message: Message) => {
+      .pipe(filter((message: Message) => {
                // belongs to this thread
         return (message.thread.id === thread.id) &&
                // and isn't authored by this user
                (message.author.id !== user.id);
-      });
+      }));
   }
 }
 

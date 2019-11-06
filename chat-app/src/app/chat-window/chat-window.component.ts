@@ -1,6 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ChatThread } from '../chat-thread/chat-thread.component';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Component, OnInit, ChangeDetectionStrategy, ElementRef } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { Message } from '../message/message.model';
+import { MessagesService } from '../message/messages.service';
+import { Thread } from '../thread/thread.model';
+import { ThreadsService } from '../thread/threads.service';
+import { User } from '../user/user.model';
+import { UsersService } from '../user/users.service';
 
 @Component({
   selector: 'chat-window',
@@ -8,15 +14,15 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
   templateUrl: './chat-window.component.html',
   styleUrls: ['./chat-window.component.css']
 })
-export class ChatWindowComponent implements OnInit {
+export class ChatWindow implements OnInit {
   messages: Observable<any>;
-  currentThread: ChatThread;
+  currentThread: Thread;
   draftMessage: Message;
   currentUser: User;
 
-  constructor(private messagesServce: MessagesService,
+  constructor(private messagesService: MessagesService,
               private threadsService: ThreadsService,
-              private userService: UserService,
+              private usersService: UsersService,
               private el: ElementRef) {
   }
 
@@ -27,7 +33,7 @@ export class ChatWindowComponent implements OnInit {
       (thread: Thread) => {
         this.currentThread = thread;
       });
-    this.userService.currentUser.subscribe(
+    this.usersService.currentUser.subscribe(
       (user: User) => {
         this.currentUser = user;
       });
@@ -55,7 +61,7 @@ export class ChatWindowComponent implements OnInit {
 
   scrollToBottom(): void {
     let scrollPane: any = this.el
-      .nativeElement.querySelectr('.msg-container-base');
+      .nativeElement.querySelector('.msg-container-base');
     scrollPane.scrollTop = scrollPane.scrollHeight;
   }
 }
