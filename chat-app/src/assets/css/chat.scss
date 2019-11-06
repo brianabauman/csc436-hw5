@@ -69,6 +69,12 @@
   }
 }
 
+.hide-chat {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
 .chat-window-container {
   @extend .row;
 }
@@ -77,7 +83,7 @@
   @extend .col-xs-10, .col-sm-5;
 
   bottom: 0;
-  right: 0;
+  right: 65px;
   position: fixed;
   float: right;
   margin-left: 10px;

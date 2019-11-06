@@ -6,6 +6,8 @@ import { Message } from '../message/message.model';
 import { MessagesService } from '../message/messages.service';
 import { Thread } from '../thread/thread.model';
 import { ThreadsService } from '../thread/threads.service';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'nav-bar',
@@ -16,7 +18,9 @@ export class ChatNavBar implements OnInit {
   unreadMessagesCount: number;
 
   constructor(private messagesService: MessagesService,
-              private threadsService: ThreadsService) { }
+              private threadsService: ThreadsService,
+              private authService: AuthService,
+              private router: Router) { }
 
     ngOnInit(): void {
         combineLatest(
@@ -42,5 +46,10 @@ export class ChatNavBar implements OnInit {
               },
               0);
         });
+    }
+
+    logout() {
+      this.authService.logout();
+      this.router.navigate(['/login']);
     }
 }
